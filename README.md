@@ -1,91 +1,177 @@
-DevOps Practice Project – Dist Directory
+Trend – AWS DevOps CI/CD Deployment
 
-This repository contains the production-ready build files (dist folder) for DevOps practice and deployment exercises.
+Project Overview
 
-It is intentionally structured to help learners focus on CI/CD pipelines, hosting, containerization, and infrastructure setup rather than application development.
+Trend is a production-ready web application deployed on AWS using Docker, Amazon ECR, Amazon EKS, Kubernetes, AWS CodeBuild, AWS CodePipeline, and a Kubernetes LoadBalancer.
 
-📁 What This Repository Contains
+The objective of this project is to demonstrate an end-to-end CI/CD deployment workflow from GitHub to a running application on Amazon EKS.
 
-dist/ – Compiled and production-ready static files
+GitHub Repository
 
-HTML
+https://github.com/abhaybhadauriya123/Trend
 
-CSS
+Architecture
 
-JavaScript
+GitHub Repository→ AWS CodePipeline→ AWS CodeBuild→ Docker Image / Amazon ECR→ Amazon EKS (trend-cluster)→ Kubernetes Deployment→ Kubernetes Service (trend-app-service)→ AWS Load Balancer→ Trend Application
 
-Assets (images, fonts, etc.)
+AWS Resources
 
-These files are ready to deploy to:
+Resource
 
-Web servers (Nginx / Apache)
+Value
 
-Cloud platforms (AWS S3, Azure Blob, GCP Storage)
+AWS Region
 
-Containerized environments (Docker + Nginx)
+ap-south-1 (Asia Pacific – Mumbai)
 
-Kubernetes clusters
+GitHub Repository
 
-CI/CD pipeline demonstrations
+abhaybhadauriya123/Trend
 
-🎯 Purpose of This Repository
+CodeBuild Project
 
-This repository is designed for:
+trend-codebuild-role
 
-DevOps beginners
+CodePipeline
 
-CI/CD practice
+trend-pipeline
 
-Deployment pipeline testing
+EKS Cluster
 
-Docker & Kubernetes deployment exercises
+trend-cluster
 
-Web server configuration practice
+Kubernetes Deployment
 
-Reverse proxy and load balancer setup
+trend-app
 
-The goal is to simulate real-world deployment scenarios using already built application files.
+Kubernetes Service
 
-❓ Why is there NO package.json?
+trend-app-service
 
-You may notice that this repository does not include:
+Service Type
 
-package.json
+LoadBalancer
 
-node_modules
+Application Port
 
-Source code (src/)
+3000
 
-Build tools configuration
+Load Balancer DNS
 
-✅ Reason:
+a2f548479cd504fb4b5b3b1e1aad253b-1757595433.ap-south-1.elb.amazonaws.com
 
-This repository only contains the final production build output (dist), not the development source code.
+Load Balancer ARN
 
-In a typical project:
+arn:aws:elasticloadbalancing:ap-south-1:080641083688:loadbalancer/a2f548479cd504fb4b5b3b1e1aad253b
 
-Developers write source code.
+Application URL
 
-The project is built using tools like:
+http://a2f548479cd504fb4b5b3b1e1aad253b-1757595433.ap-south-1.elb.amazonaws.com:3000
 
-Node.js
+CI/CD Pipeline
 
-Webpack
+1. Source Stage
 
-Vite
+GitHub is configured as the source provider through an AWS-managed GitHub App connection.
 
-React (or other frameworks)
+Repository:abhaybhadauriya123/Trend
 
-A dist/ folder is generated.
+Branch:main
 
-Only the production build is deployed to servers.
+2. Build Stage
 
-This repository represents step 4 only.
+AWS CodeBuild project:trend-codebuild-role
 
-Since this is already the compiled output:
+The build process uses the repository build configuration and prepares the application/container deployment artifacts.
 
-No dependencies are required
+3. Deploy Stage
 
-No build process is required
+AWS CodePipeline deploys to Amazon EKS.
 
-No package.json is needed
+EKS cluster:trend-cluster
+
+Kubernetes manifest:deployment.yaml
+
+The deployment was successfully completed after configuring the CodePipeline service role as an EKS access entry.
+
+Kubernetes Validation
+
+The deployment was verified from the Ubuntu AWS EC2 environment.
+
+Expected/verified commands:
+
+kubectl get pods -A
+kubectl get deployments -A
+kubectl get services -A
+
+The application pods were running with 1/1 Running, the deployment showed 2/2 available, and the service was exposed through a Kubernetes LoadBalancer.
+
+Application Access
+
+The deployed application is available through:
+
+http://a2f548479cd504fb4b5b3b1e1aad253b-1757595433.ap-south-1.elb.amazonaws.com:3000
+
+Important Kubernetes Service Details
+
+The Kubernetes service:
+
+trend-app-service
+
+was exposed as:
+
+LoadBalancer
+
+and forwarded traffic to application port 3000.
+
+Deployment Troubleshooting
+
+During the pipeline setup, the EKS deployment initially failed because the CodePipeline service role was not authorized to access the EKS cluster.
+
+The issue was resolved by adding the CodePipeline service role as an IAM access entry in the trend-cluster.
+
+After the access entry was created, the pipeline was retried and the Source, Build, and Deploy stages completed successfully.
+
+Repository Contents
+
+The repository contains deployment-related files including:
+
+Dockerfile
+
+buildspec.yml
+
+deployment.yaml
+
+service.yaml
+
+dist/
+
+AWS/Kubernetes related deployment assets
+
+Submission Checklist
+
+GitHub repository link
+
+CI/CD pipeline created
+
+GitHub Source stage configured
+
+AWS CodeBuild stage configured
+
+Amazon EKS deployment configured
+
+Kubernetes LoadBalancer created
+
+Application successfully opened through LoadBalancer
+
+Load Balancer ARN obtained
+
+Add screenshots to the submission document
+
+Final Submission Values
+
+GitHub Link:https://github.com/abhaybhadauriya123/Trend
+
+Kubernetes LoadBalancer ARN:arn:aws:elasticloadbalancing:ap-south-1:080641083688:loadbalancer/a2f548479cd504fb4b5b3b1e1aad253b
+
+Application URL:http://a2f548479cd504fb4b5b3b1e1aad253b-1757595433.ap-south-1.elb.amazonaws.com:3000
